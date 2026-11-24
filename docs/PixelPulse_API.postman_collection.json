@@ -1,0 +1,2360 @@
+{
+  "info": {
+    "name": "PixelPulse API - PA4",
+    "description": "Pruebas de los 6 módulos CRUD. Ejecutar con Collection Runner en orden. Requiere la base de datos cargada y Apache+MySQL activos (XAMPP).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost/pixelpulse-api/public"
+    },
+    {
+      "key": "usuarioId",
+      "value": ""
+    },
+    {
+      "key": "generoId",
+      "value": ""
+    },
+    {
+      "key": "plataformaId",
+      "value": ""
+    },
+    {
+      "key": "juegoId",
+      "value": ""
+    },
+    {
+      "key": "resenaId",
+      "value": ""
+    },
+    {
+      "key": "noticiaId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Verificar que la API responde",
+      "item": [
+        {
+          "name": "GET / (ruta de prueba)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "CRUD completo",
+          "item": [
+            {
+              "name": "POST crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"Prueba\",\n  \"apellidos\": \"Postman\",\n  \"correo\": \"prueba.{{$timestamp}}@pixelpulse.com\",\n  \"clave\": \"prueba123\",\n  \"rol\": \"Editor\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });",
+                      "if (pm.response.code === 201) { pm.collectionVariables.set(\"usuarioId\", pm.response.json().data.id_usuario); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET listar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios",
+                    "{{usuarioId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "PUT actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios",
+                    "{{usuarioId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"Prueba\",\n  \"apellidos\": \"Actualizado\",\n  \"correo\": \"prueba.{{$timestamp}}@pixelpulse.com\",\n  \"rol\": \"Editor\",\n  \"estado\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE eliminar (eliminación lógica)",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios/{{usuarioId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios",
+                    "{{usuarioId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Validaciones y errores",
+          "item": [
+            {
+              "name": "GET por ID inexistente → 404",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios/99999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios",
+                    "99999"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST correo repetido → 409",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"Otro\",\n  \"apellidos\": \"Usuario\",\n  \"correo\": \"carlos.mendoza@pixelpulse.com\",\n  \"clave\": \"abc12345\",\n  \"rol\": \"Editor\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 409\", function () { pm.response.to.have.status(409); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST rol inválido → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"Otro\",\n  \"apellidos\": \"Usuario\",\n  \"correo\": \"otro@pixelpulse.com\",\n  \"clave\": \"abc12345\",\n  \"rol\": \"Invitado\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST sin clave → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/usuarios",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "usuarios"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"Otro\",\n  \"apellidos\": \"Usuario\",\n  \"correo\": \"otro2@pixelpulse.com\",\n  \"rol\": \"Editor\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Géneros",
+      "item": [
+        {
+          "name": "CRUD completo",
+          "item": [
+            {
+              "name": "POST crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Terror\",\n  \"descripcion\": \"Ambientes oscuros y tensión constante.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });",
+                      "if (pm.response.code === 201) { pm.collectionVariables.set(\"generoId\", pm.response.json().data.id_genero); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET listar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos/{{generoId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos",
+                    "{{generoId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "PUT actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos/{{generoId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos",
+                    "{{generoId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Terror\",\n  \"descripcion\": \"Descripción actualizada desde Postman.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE eliminar",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos/{{generoId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos",
+                    "{{generoId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Validaciones y errores",
+          "item": [
+            {
+              "name": "GET por ID inexistente → 404",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos/99999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos",
+                    "99999"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST sin nombre → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"descripcion\": \"Sin nombre\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST nombre repetido → 409",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Acción\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 409\", function () { pm.response.to.have.status(409); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE género en uso → 409",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/generos/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "generos",
+                    "1"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 409\", function () { pm.response.to.have.status(409); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Plataformas",
+      "item": [
+        {
+          "name": "CRUD completo",
+          "item": [
+            {
+              "name": "POST crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Steam Deck\",\n  \"tipo\": \"Portatil\",\n  \"fabricante\": \"Valve\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });",
+                      "if (pm.response.code === 201) { pm.collectionVariables.set(\"plataformaId\", pm.response.json().data.id_plataforma); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET listar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas/{{plataformaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas",
+                    "{{plataformaId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "PUT actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas/{{plataformaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas",
+                    "{{plataformaId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Steam Deck\",\n  \"tipo\": \"Portatil\",\n  \"fabricante\": \"Valve Corporation\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE eliminar",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas/{{plataformaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas",
+                    "{{plataformaId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Validaciones y errores",
+          "item": [
+            {
+              "name": "GET por ID inexistente → 404",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas/99999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas",
+                    "99999"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST tipo inválido → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"Atari\",\n  \"tipo\": \"Arcade\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST nombre repetido → 409",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"PC\",\n  \"tipo\": \"PC\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 409\", function () { pm.response.to.have.status(409); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE plataforma en uso → 409",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/plataformas/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "plataformas",
+                    "1"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 409\", function () { pm.response.to.have.status(409); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Juegos",
+      "item": [
+        {
+          "name": "CRUD completo",
+          "item": [
+            {
+              "name": "POST crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Juego de Prueba\",\n  \"desarrollador\": \"Estudio Demo\",\n  \"fecha_lanzamiento\": \"2026-10-15\",\n  \"precio\": 19.99,\n  \"id_genero\": 1,\n  \"id_plataforma\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });",
+                      "if (pm.response.code === 201) { pm.collectionVariables.set(\"juegoId\", pm.response.json().data.id_juego); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET listar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos/{{juegoId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos",
+                    "{{juegoId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "PUT actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos/{{juegoId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos",
+                    "{{juegoId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Juego de Prueba\",\n  \"desarrollador\": \"Estudio Demo\",\n  \"fecha_lanzamiento\": \"2026-10-15\",\n  \"precio\": 0,\n  \"id_genero\": 1,\n  \"id_plataforma\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE eliminar (eliminación lógica)",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos/{{juegoId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos",
+                    "{{juegoId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Validaciones y errores",
+          "item": [
+            {
+              "name": "GET por ID inexistente → 404",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos/99999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos",
+                    "99999"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST precio negativo → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"precio\": -5,\n  \"id_genero\": 1,\n  \"id_plataforma\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST género inexistente → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"precio\": 10,\n  \"id_genero\": 999,\n  \"id_plataforma\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST juego gratuito (precio 0) → 201",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Juego Gratis de Prueba\",\n  \"precio\": 0,\n  \"id_genero\": 5,\n  \"id_plataforma\": 5\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST fecha inválida → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/juegos",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "juegos"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"precio\": 10,\n  \"fecha_lanzamiento\": \"15/10/2026\",\n  \"id_genero\": 1,\n  \"id_plataforma\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reseñas",
+      "item": [
+        {
+          "name": "CRUD completo",
+          "item": [
+            {
+              "name": "POST crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Reseña de prueba\",\n  \"contenido\": \"Contenido de la reseña creada desde Postman.\",\n  \"puntuacion\": 8.5,\n  \"id_juego\": 1,\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });",
+                      "if (pm.response.code === 201) { pm.collectionVariables.set(\"resenaId\", pm.response.json().data.id_resena); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET listar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas/{{resenaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas",
+                    "{{resenaId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "PUT actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas/{{resenaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas",
+                    "{{resenaId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Reseña de prueba\",\n  \"contenido\": \"Contenido actualizado.\",\n  \"puntuacion\": 9.0,\n  \"estado\": \"Borrador\",\n  \"id_juego\": 1,\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE eliminar",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas/{{resenaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas",
+                    "{{resenaId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Validaciones y errores",
+          "item": [
+            {
+              "name": "GET por ID inexistente → 404",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas/99999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas",
+                    "99999"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST puntuación 15 → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"contenido\": \"Y\",\n  \"puntuacion\": 15,\n  \"id_juego\": 1,\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST juego inexistente → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"contenido\": \"Y\",\n  \"puntuacion\": 7,\n  \"id_juego\": 999,\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST estado inválido → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/resenas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "resenas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"contenido\": \"Y\",\n  \"puntuacion\": 7,\n  \"estado\": \"Oculta\",\n  \"id_juego\": 1,\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Noticias",
+      "item": [
+        {
+          "name": "CRUD completo",
+          "item": [
+            {
+              "name": "POST crear",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Noticia de prueba\",\n  \"resumen\": \"Resumen de la noticia creada desde Postman.\",\n  \"categoria\": \"Indie\",\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 201\", function () { pm.response.to.have.status(201); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });",
+                      "if (pm.response.code === 201) { pm.collectionVariables.set(\"noticiaId\", pm.response.json().data.id_noticia); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET listar",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "GET por ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias/{{noticiaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias",
+                    "{{noticiaId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "PUT actualizar",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias/{{noticiaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias",
+                    "{{noticiaId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"Noticia de prueba\",\n  \"resumen\": \"Resumen actualizado.\",\n  \"categoria\": \"Eventos\",\n  \"publicada\": 0,\n  \"id_usuario\": 2,\n  \"id_juego\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "DELETE eliminar",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias/{{noticiaId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias",
+                    "{{noticiaId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 200\", function () { pm.response.to.have.status(200); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Validaciones y errores",
+          "item": [
+            {
+              "name": "GET por ID inexistente → 404",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias/99999",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias",
+                    "99999"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST categoría inválida → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"resumen\": \"Y\",\n  \"categoria\": \"Deportes\",\n  \"id_usuario\": 2\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "POST usuario inexistente → 400",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/noticias",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "noticias"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"titulo\": \"X\",\n  \"resumen\": \"Y\",\n  \"categoria\": \"Indie\",\n  \"id_usuario\": 999\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Código de estado 400\", function () { pm.response.to.have.status(400); });",
+                      "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Errores generales",
+      "item": [
+        {
+          "name": "Ruta inexistente → 404",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/inexistente",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "inexistente"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Código de estado 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Método no permitido → 405",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/generos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "generos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Código de estado 405\", function () { pm.response.to.have.status(405); });",
+                  "pm.test(\"Responde JSON con success\", function () { pm.expect(pm.response.json()).to.have.property(\"success\"); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

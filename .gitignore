@@ -1,0 +1,13 @@
+# Dependencias
+/vendor/
+/node_modules/
+
+# Datos sensibles: NUNCA subir el .env real
+.env
+
+# Archivos del sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
